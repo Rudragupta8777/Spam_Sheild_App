@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Spam Shield</string>
+    <string name="corrected_by_you">corrected by you</string>
+    <string name="empty_state">No messages screened yet.\nIncoming SMS will show up here automatically.</string>
+    <string name="test_message_title">Test a message</string>
+    <string name="test_message_hint">Type Hinglish/English text (e.g., bhai lottery jeet gaya click kar)</string>
+    <string name="run_inference">Run Local Inference</string>
+    <string name="mark_spam">Mark as Spam</string>
+    <string name="mark_not_spam">Mark as Not Spam</string>
+    <string name="cancel">Cancel</string>
+</resources>
