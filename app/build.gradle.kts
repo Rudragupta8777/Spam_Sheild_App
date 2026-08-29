@@ -67,6 +67,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.work.runtime.ktx)
     testImplementation(libs.junit)
+    // Android ships org.json, but the JVM unit-test classpath only has a stub whose methods throw.
+    // The real implementation lets TextFeaturizerParityTest read its golden fixture.
+    testImplementation("org.json:json:20240303")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 

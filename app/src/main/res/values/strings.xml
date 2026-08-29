@@ -8,4 +8,18 @@
     <string name="mark_spam">Mark as Spam</string>
     <string name="mark_not_spam">Mark as Not Spam</string>
     <string name="cancel">Cancel</string>
+
+    <string name="consent_title">Help improve detection?</string>
+    <string name="consent_message">When you mark a message as “Not Spam”, we can send that message’s text to help retrain the model, so it stops making the same mistake.\n\nThis only ever applies to messages you correct yourself. Messages screened automatically are never uploaded, and safe messages never leave your phone otherwise.\n\nYou can change this any time in the menu.</string>
+    <string name="consent_allow">Share corrections</string>
+    <string name="consent_deny">Keep private</string>
+    <string name="consent_on">Corrections will be shared to improve the model</string>
+    <string name="consent_off">Corrections stay on this device</string>
+
+    <string name="action_share_corrections">Share my corrections</string>
+    <string name="action_check_update">Check for model update</string>
+    <string name="action_model_info">Model version</string>
+    <string name="model_bundled">Using the model bundled with the app (no update downloaded yet).</string>
+    <string name="model_version_fmt">Running downloaded model v%1$d.</string>
+    <string name="checking_update">Checking for a new model…</string>
 </resources>

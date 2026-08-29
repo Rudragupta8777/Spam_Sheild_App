@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    DEBUG BUILDS ONLY. Allows cleartext HTTP to loopback/LAN addresses so the telemetry backend
+    and model host can be run on a developer machine (10.0.2.2 for the emulator, a 192.168.x /
+    172.16-31.x address for a phone on the same Wi-Fi).
+
+    Release builds do not include this file, so they keep Android's default: cleartext blocked,
+    HTTPS only.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">10.0.2.2</domain>       <!-- emulator -> host loopback -->
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">127.0.0.1</domain>
+        <domain includeSubdomains="true">192.168.0.0</domain>
+        <domain includeSubdomains="true">172.17.99.254</domain>  <!-- this dev machine's LAN IP -->
+    </domain-config>
+</network-security-config>

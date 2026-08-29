@@ -28,7 +28,7 @@ class TelemetrySyncWorker(context: Context, params: WorkerParameters) :
 
         for (record in pending) {
             val source = if (record.reviewedLabel != null) "user_correction" else "model"
-            val success = telemetryClient.report(record, source)
+            val success = telemetryClient.report(record, source, applicationContext)
             if (success) {
                 repository.markSynced(record.id)
             } else {

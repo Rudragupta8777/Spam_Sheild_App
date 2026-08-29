@@ -21,8 +21,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.spamshield.app.data.AppPrefs
 import com.spamshield.app.data.MessageRecord
 import com.spamshield.app.data.MessageRepository
+import com.spamshield.app.model.ModelUpdateWorker
 import kotlinx.coroutines.launch
 
 /**
@@ -47,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         requestSmsPermissions()
         requestBatteryExemption()
         TelemetrySyncWorker.schedulePeriodic(this)
+        ModelUpdateWorker.schedulePeriodic(this)
 
         setupList()
         setupSwipeRefresh()
@@ -124,7 +127,7 @@ class MainActivity : AppCompatActivity() {
                     isSpam = true,
                     confidence = result.confidence
                 )
-                if (TelemetryClient().report(record, source = "model")) {
+                if (TelemetryClient().report(record, source = "model", context = this@MainActivity)) {
                     repository.markSynced(id)
                 }
             }
@@ -143,16 +146,111 @@ class MainActivity : AppCompatActivity() {
             .setItems(options) { _, which ->
                 val correctedIsSpam = which == 0
                 if (correctedIsSpam == currentVerdict) return@setItems
-                lifecycleScope.launch {
-                    repository.correctLabel(record.id, correctedIsSpam)
-                    val corrected = record.copy(reviewedLabel = correctedIsSpam)
-                    if (TelemetryClient().report(corrected, source = "user_correction")) {
-                        repository.markSynced(record.id)
-                    }
-                }
+                applyCorrection(record, correctedIsSpam)
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+    }
+
+    /**
+     * Records the correction locally, then reports it.
+     *
+     * Correcting a message to "not spam" is the only path in the app that can upload the text of
+     * a non-spam message, so the first time it happens we ask. Marking something as spam needs no
+     * prompt: reporting spam is what the app is for, and that text is already shared for any
+     * message the model itself flags.
+     */
+    private fun applyCorrection(record: MessageRecord, correctedIsSpam: Boolean) {
+        val prefs = AppPrefs.getInstance(this)
+        if (!correctedIsSpam && !prefs.correctionConsentAsked) {
+            showConsentDialog { prefs.correctionConsentAsked = true; persistCorrection(record, false) }
+            return
+        }
+        persistCorrection(record, correctedIsSpam)
+    }
+
+    private fun persistCorrection(record: MessageRecord, correctedIsSpam: Boolean) {
+        lifecycleScope.launch {
+            repository.correctLabel(record.id, correctedIsSpam)
+            val corrected = record.copy(reviewedLabel = correctedIsSpam)
+            if (TelemetryClient().report(corrected, source = "user_correction",
+                                         context = this@MainActivity)) {
+                repository.markSynced(record.id)
+            }
+        }
+    }
+
+    /** One-time, explicit opt-in. Declining still records the correction locally. */
+    private fun showConsentDialog(onDecided: () -> Unit) {
+        val prefs = AppPrefs.getInstance(this)
+        AlertDialog.Builder(this)
+            .setTitle(R.string.consent_title)
+            .setMessage(R.string.consent_message)
+            .setPositiveButton(R.string.consent_allow) { _, _ ->
+                prefs.correctionConsentGranted = true
+                onDecided()
+            }
+            .setNegativeButton(R.string.consent_deny) { _, _ ->
+                prefs.correctionConsentGranted = false
+                onDecided()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    override fun onCreateOptionsMenu(menu: android.view.Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: android.view.Menu): Boolean {
+        menu.findItem(R.id.action_share_corrections)?.isChecked =
+            AppPrefs.getInstance(this).correctionConsentGranted
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_share_corrections -> {
+                val prefs = AppPrefs.getInstance(this)
+                val enabled = !item.isChecked
+                item.isChecked = enabled
+                prefs.correctionConsentGranted = enabled
+                prefs.correctionConsentAsked = true
+                android.widget.Toast.makeText(
+                    this,
+                    if (enabled) R.string.consent_on else R.string.consent_off,
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+                true
+            }
+            R.id.action_check_update -> {
+                ModelUpdateWorker.checkNow(this)
+                android.widget.Toast.makeText(this, R.string.checking_update,
+                    android.widget.Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.action_model_info -> {
+                showModelInfo()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    /** Surfaces which model is actually running - useful when verifying an OTA update landed. */
+    private fun showModelInfo() {
+        lifecycleScope.launch {
+            val classifier = SpamClassifier(this@MainActivity)
+            val version = try { classifier.modelVersion } finally { classifier.close() }
+            val label = if (version == 0) getString(R.string.model_bundled)
+                        else getString(R.string.model_version_fmt, version)
+            AlertDialog.Builder(this@MainActivity)
+                .setTitle(R.string.action_model_info)
+                .setMessage(label)
+                .setPositiveButton(android.R.string.ok, null)
+                .show()
+        }
     }
 
     /**

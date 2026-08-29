@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_share_corrections"
+        android:title="@string/action_share_corrections"
+        android:checkable="true"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_check_update"
+        android:title="@string/action_check_update"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_model_info"
+        android:title="@string/action_model_info"
+        app:showAsAction="never" />
+</menu>

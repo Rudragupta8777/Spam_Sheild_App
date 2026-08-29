@@ -94,7 +94,7 @@ class SmsReceiver : BroadcastReceiver() {
                     isSpam = true,
                     confidence = result.confidence
                 )
-                if (TelemetryClient().report(record, source = "model")) {
+                if (TelemetryClient().report(record, source = "model", context = context)) {
                     repository.markSynced(recordId)
                 }
                 TelemetrySyncWorker.schedulePeriodic(context)
