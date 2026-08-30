@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fully rounded pill. Fill color is a placeholder - MessageAdapter tints it per verdict via
+     backgroundTintList, so this one drawable serves the SPAM/SAFE/REVIEW badge states. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/md_surface_variant" />
+    <corners android:radius="999dp" />
+</shape>

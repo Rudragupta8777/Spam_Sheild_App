@@ -10,7 +10,6 @@ import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -57,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
         repository.messages.observe(this) { messages ->
             adapter.submitList(messages)
-            findViewById<TextView>(R.id.txtEmptyState).visibility =
+            findViewById<android.view.View>(R.id.emptyStateGroup).visibility =
                 if (messages.isEmpty()) android.view.View.VISIBLE else android.view.View.GONE
         }
 

@@ -1,12 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--
+        Material 3 semantic palette - LIGHT theme.
+        Seed hue: indigo (#4355D9), chosen for a security/shield product - reads as trustworthy
+        and technical without being cold. Roles follow the standard M3 naming so the theme file
+        can bind them directly to colorPrimary/colorSurface/etc.
+    -->
+    <color name="md_primary">#4355D9</color>
+    <color name="md_on_primary">#FFFFFF</color>
+    <color name="md_primary_container">#E0E0FF</color>
+    <color name="md_on_primary_container">#00095C</color>
+
+    <color name="md_secondary">#5C5D72</color>
+    <color name="md_on_secondary">#FFFFFF</color>
+    <color name="md_secondary_container">#E1E0F9</color>
+    <color name="md_on_secondary_container">#191A2C</color>
+
+    <color name="md_tertiary">#79536A</color>
+    <color name="md_on_tertiary">#FFFFFF</color>
+    <color name="md_tertiary_container">#FFD8EC</color>
+    <color name="md_on_tertiary_container">#2F1124</color>
+
+    <color name="md_error">#BA1A1A</color>
+    <color name="md_on_error">#FFFFFF</color>
+    <color name="md_error_container">#FFDAD6</color>
+    <color name="md_on_error_container">#410002</color>
+
+    <color name="md_background">#FCF8FF</color>
+    <color name="md_on_background">#1B1B1F</color>
+    <color name="md_surface">#FCF8FF</color>
+    <color name="md_on_surface">#1B1B1F</color>
+    <color name="md_surface_variant">#E3E1EC</color>
+    <color name="md_on_surface_variant">#46464F</color>
+    <color name="md_surface_container_low">#F5F2FA</color>
+    <color name="md_surface_container">#EFECF4</color>
+    <color name="md_surface_container_high">#E9E7EF</color>
+
+    <color name="md_outline">#777680</color>
+    <color name="md_outline_variant">#C7C5D0</color>
+
+    <!--
+        Semantic status containers (spam / safe / corrected-by-you). Same tonal-container pattern
+        as M3's own error role: a soft, low-chroma background paired with a dark, saturated
+        on-color, both light-mode-safe. The dark equivalents live in values-night/colors.xml under
+        the SAME names, so every layout/adapter reference below auto-adapts with zero code changes.
+    -->
+    <color name="spam_container">#FFDAD6</color>
+    <color name="on_spam_container">#410002</color>
+    <color name="safe_container">#D7F5D8</color>
+    <color name="on_safe_container">#0B3B12</color>
+    <color name="review_container">#FFE6B0</color>
+    <color name="on_review_container">#402D00</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
-    <color name="spam_red">#D32F2F</color>
-    <color name="spam_red_bg">#FDECEA</color>
-    <color name="safe_green">#2E7D32</color>
-    <color name="safe_green_bg">#E8F5E9</color>
-    <color name="review_amber">#F57F17</color>
-    <color name="text_secondary">#757575</color>
 </resources>

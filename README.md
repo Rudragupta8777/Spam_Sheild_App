@@ -18,8 +18,17 @@ that is measured and why the test-split number is the less meaningful one.
 - Long-press any message to correct a wrong verdict; the correction is sent to the backend so it
   can feed the next model retrain (see the root project README for the full loop).
 - The FAB lets you run inference on arbitrary typed text without waiting for a real SMS.
-- Toasts + a persistent local record when spam is blocked; a background WorkManager job retries
-  any telemetry report that failed to send (no signal, backend down, etc).
+- Toasts + a persistent local record when spam is *detected*; a background WorkManager job
+  retries any telemetry report that failed to send (no signal, backend down, etc).
+
+**This app does not block, hide, or mute anything at the OS level.** It listens to the
+`SMS_RECEIVED` broadcast, which Android sends to every app holding `RECEIVE_SMS` as an
+informational copy — it is not the exclusive `SMS_DELIVER` broadcast, which only the phone's
+designated *default SMS app* receives, and this app never registers as that. Your actual
+messaging app (Google Messages, Samsung Messages, etc.) receives and displays every SMS exactly
+as if this app were not installed. This app only maintains its own separate "here's what I think
+is spam" list — nothing a wrong verdict here does can cause a message to go unseen, which matters
+given the model is not yet 100% accurate and will keep improving via the retrain loop.
 
 ## Setup
 

@@ -21,6 +21,11 @@ class MessageAdapter(
             override fun areContentsTheSame(old: MessageRecord, new: MessageRecord) = old == new
         }
         private val dateFormat = SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault())
+
+        private fun pill(context: android.content.Context, colorRes: Int) =
+            ContextCompat.getDrawable(context, R.drawable.bg_badge_pill)
+                ?.mutate()
+                ?.apply { setTint(ContextCompat.getColor(context, colorRes)) }
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -43,20 +48,26 @@ class MessageAdapter(
         holder.txtSender.text = item.sender
         holder.txtBody.text = item.body
 
+        // One pill drawable (bg_badge_pill) backs SPAM/SAFE/corrected-by-you alike; only the tint
+        // differs, applied to a mutated copy per row so recycled views don't share one colored
+        // Drawable instance (that would recolor every row still holding a reference to it).
         val finalIsSpam = item.reviewedLabel ?: item.isSpam
-        if (finalIsSpam) {
-            holder.txtVerdictBadge.text = "SPAM"
-            holder.txtVerdictBadge.setTextColor(ContextCompat.getColor(context, R.color.spam_red))
-            holder.txtVerdictBadge.setBackgroundColor(ContextCompat.getColor(context, R.color.spam_red_bg))
+        val (label, containerColor, onContainerColor) = if (finalIsSpam) {
+            Triple("SPAM", R.color.spam_container, R.color.on_spam_container)
         } else {
-            holder.txtVerdictBadge.text = "SAFE"
-            holder.txtVerdictBadge.setTextColor(ContextCompat.getColor(context, R.color.safe_green))
-            holder.txtVerdictBadge.setBackgroundColor(ContextCompat.getColor(context, R.color.safe_green_bg))
+            Triple("SAFE", R.color.safe_container, R.color.on_safe_container)
         }
+        holder.txtVerdictBadge.text = label
+        holder.txtVerdictBadge.setTextColor(ContextCompat.getColor(context, onContainerColor))
+        holder.txtVerdictBadge.background = pill(context, containerColor)
 
         val confidencePct = (item.confidence * 100).toInt()
         holder.txtTimestamp.text = "${dateFormat.format(item.timestamp)} · $confidencePct% confidence"
         holder.txtCorrected.visibility = if (item.reviewedLabel != null) View.VISIBLE else View.GONE
+        if (item.reviewedLabel != null) {
+            holder.txtCorrected.setTextColor(ContextCompat.getColor(context, R.color.on_review_container))
+            holder.txtCorrected.background = pill(context, R.color.review_container)
+        }
 
         holder.itemView.setOnLongClickListener {
             onLongPress(item)

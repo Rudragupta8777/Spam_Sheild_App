@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Material 3 semantic palette - DARK theme. Same indigo seed hue as the light palette, tones
+        inverted per M3 convention: "on X container" swaps toward the light end, background/surface
+        drop to near-black, primary itself lightens so it still pops on a dark surface.
+    -->
+    <color name="md_primary">#BFC3FF</color>
+    <color name="md_on_primary">#131C7B</color>
+    <color name="md_primary_container">#2C3691</color>
+    <color name="md_on_primary_container">#E0E0FF</color>
+
+    <color name="md_secondary">#C5C4DD</color>
+    <color name="md_on_secondary">#2D2E42</color>
+    <color name="md_secondary_container">#444559</color>
+    <color name="md_on_secondary_container">#E1E0F9</color>
+
+    <color name="md_tertiary">#E8B9D4</color>
+    <color name="md_on_tertiary">#46263A</color>
+    <color name="md_tertiary_container">#5F3C51</color>
+    <color name="md_on_tertiary_container">#FFD8EC</color>
+
+    <color name="md_error">#FFB4AB</color>
+    <color name="md_on_error">#690005</color>
+    <color name="md_error_container">#93000A</color>
+    <color name="md_on_error_container">#FFDAD6</color>
+
+    <color name="md_background">#131318</color>
+    <color name="md_on_background">#E4E1E9</color>
+    <color name="md_surface">#131318</color>
+    <color name="md_on_surface">#E4E1E9</color>
+    <color name="md_surface_variant">#46464F</color>
+    <color name="md_on_surface_variant">#C7C5D0</color>
+    <color name="md_surface_container_low">#1C1B21</color>
+    <color name="md_surface_container">#201F25</color>
+    <color name="md_surface_container_high">#2A292F</color>
+
+    <color name="md_outline">#90909A</color>
+    <color name="md_outline_variant">#46464F</color>
+
+    <!-- Same names as values/colors.xml, dark-safe values: muted dark background + light text. -->
+    <color name="spam_container">#5C1A16</color>
+    <color name="on_spam_container">#FFDAD6</color>
+    <color name="safe_container">#163B1B</color>
+    <color name="on_safe_container">#B7F0BA</color>
+    <color name="review_container">#4A3800</color>
+    <color name="on_review_container">#FFDDA6</color>
+</resources>
